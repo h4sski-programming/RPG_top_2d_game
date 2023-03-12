@@ -4,6 +4,7 @@ import time
 from settings import Settings
 from player import Player
 from bullet import Bullet
+from map import Map
 
 
 class Main():
@@ -14,6 +15,10 @@ class Main():
         self.clock = pygame.time.Clock()
         self.window_rect = pygame.Rect(0, 0, Settings.width, Settings.height)
         
+        self.map = Map()
+        self.map_surface = pygame.Surface((Settings.width, Settings.height))
+        self.map.draw_map(self.map_surface)
+        
         self.player = Player(x=200, y=300, hp = 10)
         
         
@@ -22,6 +27,8 @@ class Main():
     
     def draw(self):
         self.window.fill('black')
+        self.map_surface.fill('black')
+        self.window.blit(source=self.map_surface, dest=(0, 0))
         
         # draw player
         pygame.draw.rect(surface=self.window,
@@ -33,16 +40,6 @@ class Main():
             pygame.draw.rect(surface=self.window,
                              color=b.color,
                              rect=b.get_rect())
-        
-        # # draw player weapon
-        # r = pygame.Surface(size=(100, 10))
-        # r.fill('green')
-        # # self.player.get_weapon_rect(self.mouse))
-        # r_rotated = pygame.transform.rotate(r, self.angle)
-        # pygame.draw.rect(surface=self.window,
-        #                  color=self.player.weapon_color,
-        #                  rect=r_rotated.get_rect())
-        #                 #  rect=self.player.get_weapon_rect(self.mouse))
         
         pygame.display.update()
     
@@ -92,18 +89,14 @@ class Main():
     
     def main_loop(self):
         
-        self.angle = 0
         self.bullets_list = []
         
         while self.running:
             self.clock.tick(Settings.fps)
-            
             self.mouse = pygame.mouse.get_pos()
-            
             self.events()
             self.update()
             self.draw()
-            self.angle += 1
             
         pygame.quit()
     
