@@ -1,4 +1,4 @@
-import pygame
+from pygame import Rect
 
 from settings import Player_settings as Pl_settings
 from sprite import Sprite
@@ -19,9 +19,8 @@ class Player(Sprite):
         self.weapon_color = Pl_settings.weapon_color
     
     def get_rect(self):
-        return pygame.Rect(self.x, self.y, self.width, self.height)
+        return Rect(self.x, self.y, self.width, self.height)
     
     def get_weapon_rect(self, p):
-        return pygame.Rect(self.x + self.width / 2,
-                           self.y + self.height / 2,
-                           self.weapon_width, self.weapon_height/2)
+        return Rect(self.x + self.width / 2, self.y + self.height / 2,
+                    self.weapon_width, self.weapon_height/2)

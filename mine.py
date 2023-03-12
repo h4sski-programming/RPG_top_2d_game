@@ -12,6 +12,7 @@ class Main():
         pygame.display.set_caption(Settings.game_title)
         self.running = True
         self.clock = pygame.time.Clock()
+        self.window_rect = pygame.Rect(0, 0, Settings.width, Settings.height)
         
         self.player = Player(x=200, y=300, hp = 10)
         
@@ -49,15 +50,15 @@ class Main():
     def update(self):
         for i, bullet in enumerate(self.bullets_list):
             bullet.increment_position()
-            if bullet.x >= Settings.width:
+            if not self.window_rect.colliderect(bullet.get_rect()):
                 self.bullets_list.pop(i)
     
     
     def create_bullet(self):
         if len(self.bullets_list) <= self.player.bullets_number:
             b = Bullet(x = self.player.x + self.player.width / 2,
-                       y = self.player.y + self.player.height / 2,
-                       self.mouse)
+                       y = self.player.y + self.player.height / 2)
+            b.calculate_delta(self.mouse)
             self.bullets_list.append(b)
             self.player.last_fire_time = pygame.time.get_ticks()
         
