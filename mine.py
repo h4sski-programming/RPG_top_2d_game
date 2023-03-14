@@ -19,7 +19,10 @@ class Main():
         self.map_surface = pygame.Surface((Settings.width, Settings.height))
         self.map.draw_map(self.map_surface)
         
-        self.player = Player(x=200, y=300, hp = 10)
+        spawn_position = self.map.get_player_position()
+        # print(spawn_position)
+        # self.player = Player(x=100, y=100, hp = 10)
+        self.player = Player(x=spawn_position[0], y=spawn_position[1], hp = 10)
         
         
         self.main_loop()
@@ -48,10 +51,13 @@ class Main():
     
     
     def update(self):
+        
+        # removing bullets from bullet_list if hit wall (or out of the window)
         for i, bullet in enumerate(self.bullets_list):
             bullet.increment_position()
-            if not self.window_rect.colliderect(bullet.get_rect()) or \
-                self.map.collidete_with_object(object=bullet, move_direction=(bullet.delta_x, bullet.delta_y)):
+            if not self.window_rect.colliderect(bullet.get_rect()) \
+                or \
+                not self.map.collidete_with_object(object=bullet, move_direction=(bullet.delta_x, bullet.delta_y)):
                 self.bullets_list.pop(i)
     
     

@@ -7,17 +7,17 @@ class Settings():
     
 class Player_settings():
     width = 30
-    height = 30
-    velocit = 5
+    height = width
+    velocit = 3
     color = 'orange'
-    bullets_number = 4      # including 0, e.g. if 3 then 4 bullets
-    fire_delay = 100         # miliseconds
+    bullets_number = 2      # including 0, e.g. if 3 then 4 bullets
+    fire_delay = 200         # miliseconds
     weapon_width = 70
     weapon_heigh = 8
     weapon_color = 'white'
     
 class Bullet_settings():
-    width = 10
+    width = 7
     height = width
-    velocity = 12
+    velocity = 5
     color = 'red'

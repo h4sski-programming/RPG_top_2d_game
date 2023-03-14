@@ -5,7 +5,8 @@ from sprite import Sprite
 
 class Player(Sprite):
     def __init__(self, x, y, hp) -> None:
-        super().__init__(x, y, Pl_settings.width, Pl_settings.height)
+        super().__init__(x + Pl_settings.width/2, y + Pl_settings.height/2,
+                         Pl_settings.width, Pl_settings.height)
         
         self.hp = hp
         self.velocity = Pl_settings.velocit
