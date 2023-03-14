@@ -27,7 +27,10 @@ class Main():
     
     def draw(self):
         self.window.fill('black')
+        
+        # drawing the map
         self.map_surface.fill('black')
+        self.map.draw_map(self.map_surface)
         self.window.blit(source=self.map_surface, dest=(0, 0))
         
         # draw player
@@ -47,7 +50,8 @@ class Main():
     def update(self):
         for i, bullet in enumerate(self.bullets_list):
             bullet.increment_position()
-            if not self.window_rect.colliderect(bullet.get_rect()):
+            if not self.window_rect.colliderect(bullet.get_rect()) or \
+                self.map.collidete_with_object(object=bullet, move_direction=(bullet.delta_x, bullet.delta_y)):
                 self.bullets_list.pop(i)
     
     
@@ -71,14 +75,18 @@ class Main():
         
         # player movement
         # horizontal
-        if keys[pygame.K_a] and self.player.x >= 0:
+        if keys[pygame.K_a] and self.player.x >= 0 and \
+            self.map.collidete_with_object(object=self.player, move_direction=(-self.player.velocity, 0)):
             self.player.x -= self.player.velocity
-        if keys[pygame.K_d] and self.player.x + self.player.width <= Settings.width:
+        if keys[pygame.K_d] and self.player.x + self.player.width <= Settings.width and \
+            self.map.collidete_with_object(object=self.player, move_direction=(self.player.velocity, 0)):
             self.player.x += self.player.velocity
         # vertical
-        if keys[pygame.K_w] and self.player.y >= 0:
+        if keys[pygame.K_w] and self.player.y >= 0 and \
+            self.map.collidete_with_object(object=self.player, move_direction=(0, -self.player.velocity)):
             self.player.y -= self.player.velocity
-        if keys[pygame.K_s] and self.player.y + self.player.height <= Settings.height:
+        if keys[pygame.K_s] and self.player.y + self.player.height <= Settings.height and \
+            self.map.collidete_with_object(object=self.player, move_direction=(0, self.player.velocity)):
             self.player.y += self.player.velocity
         
         m_btn = pygame.mouse.get_pressed(num_buttons=3)

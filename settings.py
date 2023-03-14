@@ -6,8 +6,8 @@ class Settings():
     fps = 60
     
 class Player_settings():
-    width = 40
-    height = 40
+    width = 30
+    height = 30
     velocit = 5
     color = 'orange'
     bullets_number = 4      # including 0, e.g. if 3 then 4 bullets
