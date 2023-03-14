@@ -5,20 +5,40 @@ from settings import Settings
 
 class Map():
     def __init__(self) -> None:
-        self.map = [[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],     #1
-                    [1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],     #2
-                    [1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1],     #3
-                    [1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1],     #4
-                    [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],     #5
-                    [1, 0, 0, 1, 0, 0, 1, 1, 1, 0, 0, 0, 1],     #6
-                    [1, 1, 1, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1],     #7
-                    [1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1],     #8
-                    [1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],     #9
-                    [1, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1],     #10
-                    [1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1],     #11
-                    [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],     #12
-                    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],     #last
-                    ]
+        # values:
+        # -1 player spawn position
+        # 0 empty (free) space
+        # 1 wall
+        self.map01 = [[1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1],     #1
+                      [1,  0,  0,  1,  0,  0,  0,  0,  0,  1,  0,  0,  1],     #2
+                      [1,  0,  0,  1,  0,  0,  0,  0,  0,  1,  0,  0,  1],     #3
+                      [1,  0,  0,  1,  0,  1,  1,  0,  0,  1,  0,  0,  1],     #4
+                      [1,  0, -1,  0,  0,  0,  1,  0,  0,  0,  0,  0,  1],     #5
+                      [1,  0,  0,  1,  0,  0,  1,  1,  1,  0,  0,  0,  1],     #6
+                      [1,  1,  1,  1,  0,  0,  1,  0,  0,  0,  0,  0,  1],     #7
+                      [1,  0,  0,  0,  0,  1,  1,  0,  0,  0,  0,  0,  1],     #8
+                      [1,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  1],     #9
+                      [1,  0,  0,  0,  0,  0,  0,  1,  0,  1,  1,  1,  1],     #10
+                      [1,  0,  0,  0,  1,  0,  0,  1,  0,  0,  0,  0,  1],     #11
+                      [1,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  1],     #12
+                      [1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1],     #last
+                      ]
+        self.map02 = [[1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1],     #1
+                      [1,  0,  0,  1,  0,  0,  0,  0,  0,  1,  0,  0,  1],     #2
+                      [1,  0,  0,  1,  0,  0,  0,  0,  0,  1,  0,  0,  1],     #3
+                      [1,  0,  0,  1,  0,  1,  1,  0,  0,  1,  1,  0,  1],     #4
+                      [1,  0, -1,  1,  0,  0,  1,  0,  0,  0,  0,  0,  1],     #5
+                      [1,  0,  0,  0,  0,  0,  1,  1,  1,  1,  0,  0,  1],     #6
+                      [1,  1,  1,  0,  1,  0,  1,  0,  0,  1,  0,  1,  1],     #7
+                      [1,  0,  0,  0,  1,  1,  1,  0,  0,  0,  0,  0,  1],     #8
+                      [1,  0,  0,  0,  0,  0,  1,  0,  1,  0,  0,  0,  1],     #9
+                      [1,  0,  0,  1,  1,  0,  1,  0,  1,  0,  1,  1,  1],     #10
+                      [1,  0,  0,  0,  1,  0,  0,  0,  1,  0,  0,  0,  1],     #11
+                      [1,  0,  0,  0,  1,  0,  0,  0,  1,  0,  0,  0,  1],     #12
+                      [1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1],     #last
+                      ]
+        
+        self.map = self.map01
         self.rows = len(self.map)
         self.columns = len(self.map[0])
         
@@ -40,9 +60,9 @@ class Map():
         for i, row in enumerate(self.map):
             for j, column in enumerate(row):
                 # no value means not drawing
-                if column == 0:
+                if 0 >= column:
                     continue
-                rectangle = self.generate_rectangle(i * self.column_width, j * self.row_height)
+                rectangle = self.generate_rectangle(j * self.column_width, i * self.row_height)
                 self.walls.append(rectangle)
     
     
@@ -58,4 +78,9 @@ class Map():
             if object_rect_moved.colliderect(wall):
                 return False
         return True
-            
+    
+    def get_player_position(self):
+        for row in range(self.rows):
+            for column in range(self.columns):
+                if self.map[row][column] == -1:
+                    return (column * self.column_width, row * self.row_height)
