@@ -20,14 +20,17 @@ class Main():
         self.map_surface = pygame.Surface((Settings.width, Settings.height))
         self.map.draw_map(self.map_surface)
         
-        spawn_position = self.map.get_player_position()
-        # print(spawn_position)
-        # self.player = Player(x=100, y=100, hp = 10)
+        spawn_position = self.map.get_player_position() 
         self.player = Player(x=spawn_position[0], y=spawn_position[1])
         
+        pygame.init()
+        self.player_health_font = pygame.font.SysFont(name='Verdana', size=(self.player.height), bold=True)
+        
         self.enemy_list = []
-        for _ in range(1):
-            enemy_pos = self.map.get_enemy_position(30)
+        while True:
+            continue_loop, enemy_pos = self.map.get_enemy_position(30)
+            if not continue_loop:
+                break
             enemy = Enemy(x=enemy_pos[0], y=enemy_pos[1])
             self.enemy_list.append(enemy)
         
@@ -47,11 +50,18 @@ class Main():
                          color=self.player.color,
                          rect=self.player.get_rect())
         
+        # player health label
+        player_health_label = self.player_health_font.render(f'Players health = {self.player.hp}', 1, self.player.color, 'black')
+        self.window.blit(player_health_label, (30, 5))
+        
         # draw enemys
         for enemy in self.enemy_list:
             pygame.draw.rect(surface=self.window,
                              color=enemy.color,
                              rect=enemy.get_rect())
+        
+            ### draw agro lines - for debuging
+            # pygame.draw.line(self.window, 'white', enemy.get_center_position(), self.player.get_center_position())
         
         # draw player bullets
         for b in self.bullets_list:
@@ -64,13 +74,39 @@ class Main():
     
     def update(self):
         
-        # removing bullets from bullet_list if hit wall (or out of the window)
-        for i, bullet in enumerate(self.bullets_list):
+        for b, bullet in enumerate(self.bullets_list):
             bullet.increment_position()
+            
+            # removing bullets from bullet_list if hit wall (or out of the window)
             if not self.window_rect.colliderect(bullet.get_rect()) \
                 or \
                 not self.map.collidete_with_object(object=bullet, move_direction=(bullet.delta_x, bullet.delta_y)):
-                self.bullets_list.pop(i)
+                self.bullets_list.pop(b)
+            
+            # remove bullet if hit enemy
+            for e, enemy in enumerate(self.enemy_list):
+                if bullet.get_rect().colliderect(enemy.get_rect()):
+                    self.bullets_list.pop(b)
+                    enemy.hitted()
+                    enemy.agro_on_player = True
+                    if enemy.hp == 0:
+                        self.enemy_list.pop(e)
+                        if len(self.enemy_list) == 0:
+                            self.quit_main()
+        
+        # checking agro on all enemys
+        # for en, enemy in enumerate(self.enemy_list):
+        
+        # move enemys
+        for enemy in self.enemy_list:
+            ### check agro based on distance and start moving
+            enemy.check_agro_distance(self.player.get_center_position())
+            enemy.move_to_player(self.player.get_center_position())
+            
+            ### check colision with player
+            if enemy.get_rect().colliderect(self.player.get_rect()):
+                self.quit_main()
+            
     
     
     def create_bullet(self):
@@ -111,10 +147,10 @@ class Main():
         if m_btn[0] and pygame.time.get_ticks() >= self.player.last_fire_time + self.player.fire_delay:
             self.create_bullet()
     
-    
+    def quit_main(self):
+        self.running = False
     
     def main_loop(self):
-        
         self.bullets_list = []
         
         while self.running:
@@ -123,7 +159,17 @@ class Main():
             self.events()
             self.update()
             self.draw()
-            
+        
+        quit_font = pygame.font.SysFont(name='verdana', size=100, bold=True)
+        quit_string = 'GAME OVER'
+        quit_label = quit_font.render(quit_string, 1, self.player.color, 'black')
+        quit_label_size = quit_font.size(quit_string)
+        self.window.blit(source=quit_label, 
+                         dest=((Settings.width - quit_label_size[0]) / 2,
+                               (Settings.height - quit_label_size[1]) / 2))
+        pygame.display.update()
+        
+        pygame.time.delay(2000)
         pygame.quit()
     
     

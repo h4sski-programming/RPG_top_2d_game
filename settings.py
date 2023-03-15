@@ -8,7 +8,7 @@ class Settings():
 class Player_settings():
     width = 30
     height = width
-    velocit = 3
+    velocity = 3
     hp = 10
     color = 'orange'
     bullets_number = 2      # including 0, e.g. if 3 then 4 bullets
@@ -26,6 +26,10 @@ class Bullet_settings():
 class Enemy_settings():
     width = 20
     height = width
-    velocit = 4
+    velocity = 2
+    agro_distance = 250
+    # velocit_standby = 2
+    # turning_ratio = 2
+    # movement_delay = 100
     hp = 3
     color = 'blue'
