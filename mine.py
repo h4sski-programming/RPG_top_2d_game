@@ -5,6 +5,7 @@ from settings import Settings
 from player import Player
 from bullet import Bullet
 from map import Map
+from enemy import Enemy
 
 
 class Main():
@@ -22,8 +23,13 @@ class Main():
         spawn_position = self.map.get_player_position()
         # print(spawn_position)
         # self.player = Player(x=100, y=100, hp = 10)
-        self.player = Player(x=spawn_position[0], y=spawn_position[1], hp = 10)
+        self.player = Player(x=spawn_position[0], y=spawn_position[1])
         
+        self.enemy_list = []
+        for _ in range(1):
+            enemy_pos = self.map.get_enemy_position(30)
+            enemy = Enemy(x=enemy_pos[0], y=enemy_pos[1])
+            self.enemy_list.append(enemy)
         
         self.main_loop()
         
@@ -41,7 +47,13 @@ class Main():
                          color=self.player.color,
                          rect=self.player.get_rect())
         
-        # draw bullets
+        # draw enemys
+        for enemy in self.enemy_list:
+            pygame.draw.rect(surface=self.window,
+                             color=enemy.color,
+                             rect=enemy.get_rect())
+        
+        # draw player bullets
         for b in self.bullets_list:
             pygame.draw.rect(surface=self.window,
                              color=b.color,

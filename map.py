@@ -19,7 +19,7 @@ class Map():
                       [1,  0,  0,  0,  0,  1,  1,  0,  0,  0,  0,  0,  1],     #8
                       [1,  0,  0,  0,  0,  0,  0,  0,  0,  1,  0,  0,  1],     #9
                       [1,  0,  0,  0,  0,  0,  0,  1,  0,  1,  1,  1,  1],     #10
-                      [1,  0,  0,  0,  1,  0,  0,  1,  0,  0,  0,  0,  1],     #11
+                      [1,  0,  0,  0,  1,  0,  0,  1, 30,  0,  0,  0,  1],     #11
                       [1,  0,  0,  0,  1,  0,  0,  0,  0,  0,  0,  0,  1],     #12
                       [1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1],     #last
                       ]
@@ -33,7 +33,7 @@ class Map():
                       [1,  0,  0,  0,  1,  1,  1,  0,  0,  0,  0,  0,  1],     #8
                       [1,  0,  0,  0,  0,  0,  1,  0,  1,  0,  0,  0,  1],     #9
                       [1,  0,  0,  1,  1,  0,  1,  0,  1,  0,  1,  1,  1],     #10
-                      [1,  0,  0,  0,  1,  0,  0,  0,  1,  0,  0,  0,  1],     #11
+                      [1,  0,  0,  0,  1,  0,  0,  0,  1,  0, 30,  0,  1],     #11
                       [1,  0,  0,  0,  1,  0,  0,  0,  1,  0,  0,  0,  1],     #12
                       [1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1],     #last
                       ]
@@ -60,7 +60,7 @@ class Map():
         for i, row in enumerate(self.map):
             for j, column in enumerate(row):
                 # no value means not drawing
-                if 0 >= column:
+                if 0 >= column or column >= 30:
                     continue
                 rectangle = self.generate_rectangle(j * self.column_width, i * self.row_height)
                 self.walls.append(rectangle)
@@ -84,3 +84,13 @@ class Map():
             for column in range(self.columns):
                 if self.map[row][column] == -1:
                     return (column * self.column_width, row * self.row_height)
+    
+    
+    
+    def get_enemy_position(self, enemy_id):
+        for row in range(self.rows):
+            for column in range(self.columns):
+                if self.map[row][column] == enemy_id:
+                    self.map[row][column] = 0
+                    return (column * self.column_width, row * self.row_height)
+    
